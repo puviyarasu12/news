@@ -1,4 +1,13 @@
 [
-  { "id": 1, "title": "First Article", "content": "This is the first article." },
-  { "id": 2, "title": "Second Article", "content": "This is the second article." }
+  {
+    "id": 1,
+    "title": "Old Headline Remains",
+    "content": "This is the original story content."
+  },
+  // IMPORTANT: Add a comma to separate the entries
+  {
+    "id": 2,
+    "title": "New Article: The CI/CD Pipeline is Live!",
+    "content": "The deployment is fully automated and pushing this content instantly."
+  }
 ]
