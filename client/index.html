@@ -1,52 +1,374 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News Platform with POST</title>
+    <title>Modern News Platform</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f9; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        h1 { color: #333; text-align: center; border-bottom: 2px solid #ccc; padding-bottom: 10px; }
-        .article { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px; background-color: #fff; }
-        .article h2 { color: #0056b3; margin-top: 0; }
-        .article p { color: #666; }
-        form { margin-top: 20px; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
-        input[type="text"], textarea { width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; }
-        button { padding: 10px 15px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background-color: #218838; }
-        #message { margin-top: 10px; font-weight: bold; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            color: #2d3748;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+
+        .form-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .form-section h2 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-submit {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-submit:hover {
+            background: #f7fafc;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-cancel {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            display: none;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        #message {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+
+        #message.success {
+            background: rgba(72, 187, 120, 0.2);
+            color: #2f855a;
+            display: block;
+        }
+
+        #message.error {
+            background: rgba(245, 101, 101, 0.2);
+            color: #c53030;
+            display: block;
+        }
+
+        .articles-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #e2e8f0;
+        }
+
+        .articles-header h2 {
+            color: #2d3748;
+            font-size: 2em;
+        }
+
+        .articles-count {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .article {
+            background: white;
+            border: 2px solid #e2e8f0;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .article:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .article-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .article h3 {
+            color: #2d3748;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            flex: 1;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            color: #718096;
+            font-size: 0.9em;
+        }
+
+        .article-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .article p {
+            color: #4a5568;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .article-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-edit, .btn-delete {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit {
+            background: #4299e1;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background: #fc8181;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #f56565;
+            transform: translateY(-2px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #718096;
+        }
+
+        .empty-state svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .article-actions {
+                flex-direction: column;
+            }
+
+            .btn-edit, .btn-delete {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Latest News Articles</h1>
-        
-        <h2>Create New Article</h2>
-        <form id="new-article-form">
-            <input type="text" id="title" placeholder="Article Title" required>
-            <textarea id="content" placeholder="Article Content" rows="4" required></textarea>
-            <button type="submit">Submit Article</button>
-            <div id="message" style="color: blue;"></div>
-        </form>
-        
-        <hr style="margin-top: 30px;">
-        
+        <h1>📰 News Platform</h1>
+        <p class="subtitle">Create, Edit, and Share Your Stories</p>
+
+        <div class="form-section">
+            <h2 id="form-title">Create New Article</h2>
+            <form id="article-form">
+                <input type="hidden" id="article-id">
+                <input type="text" id="title" placeholder="Article Title" required>
+                <textarea id="content" placeholder="Write your article content here..." rows="6" required></textarea>
+                <div class="button-group">
+                    <button type="submit" class="btn-submit" id="submit-btn">Publish Article</button>
+                    <button type="button" class="btn-cancel" id="cancel-btn">Cancel</button>
+                </div>
+                <div id="message"></div>
+            </form>
+        </div>
+
+        <div class="articles-header">
+            <h2>Latest Articles</h2>
+            <span class="articles-count" id="articles-count">0 Articles</span>
+        </div>
+
         <div id="articles-container">
-            <p>Loading articles...</p>
+            <div class="loading">
+                <span class="spinner"></span> Loading articles...
+            </div>
         </div>
     </div>
 
     <script>
         const container = document.getElementById('articles-container');
-        const form = document.getElementById('new-article-form');
+        const form = document.getElementById('article-form');
         const messageDiv = document.getElementById('message');
+        const formTitle = document.getElementById('form-title');
+        const submitBtn = document.getElementById('submit-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const articleIdInput = document.getElementById('article-id');
+        const articlesCount = document.getElementById('articles-count');
 
-        // Function to fetch and display articles
+        let isEditMode = false;
+
+        // Fetch and display articles
         function fetchArticles() {
-            container.innerHTML = '<p>Loading articles...</p>';
-            fetch('/api/articles') 
+            container.innerHTML = '<div class="loading"><span class="spinner"></span> Loading articles...</div>';
+            
+            fetch('/api/articles')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
@@ -54,60 +376,165 @@
                     return response.json();
                 })
                 .then(data => {
-                    container.innerHTML = ''; 
+                    container.innerHTML = '';
+                    articlesCount.textContent = `${data.length} Article${data.length !== 1 ? 's' : ''}`;
+                    
                     if (data.length === 0) {
-                        container.innerHTML = '<p>No articles found.</p>';
+                        container.innerHTML = `
+                            <div class="empty-state">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <h3>No articles yet</h3>
+                                <p>Create your first article using the form above!</p>
+                            </div>
+                        `;
                         return;
                     }
-                    data.reverse().forEach(article => { // Display newest first
+                    
+                    data.reverse().forEach(article => {
                         const articleDiv = document.createElement('div');
                         articleDiv.className = 'article';
+                        
+                        const date = article.timestamp ? new Date(article.timestamp).toLocaleDateString() : 'Unknown date';
+                        const time = article.timestamp ? new Date(article.timestamp).toLocaleTimeString() : '';
+                        
                         articleDiv.innerHTML = `
-                            <h2>${article.title || 'Untitled Article'}</h2>
+                            <div class="article-header">
+                                <h3>${article.title || 'Untitled Article'}</h3>
+                            </div>
+                            <div class="article-meta">
+                                <span>📅 ${date}</span>
+                                <span>🕐 ${time}</span>
+                                <span>🆔 #${article.id}</span>
+                            </div>
                             <p>${article.content || 'No content available.'}</p>
+                            <div class="article-actions">
+                                <button class="btn-edit" onclick="editArticle(${article.id})">✏️ Edit</button>
+                                <button class="btn-delete" onclick="deleteArticle(${article.id})">🗑️ Delete</button>
+                            </div>
                         `;
                         container.appendChild(articleDiv);
                     });
                 })
                 .catch(error => {
                     console.error('Fetch error:', error);
-                    container.innerHTML = `<p style="color: red;">Error loading news: ${error.message}. Check PM2 logs.</p>`;
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <p style="color: #fc8181;">❌ Error loading articles: ${error.message}</p>
+                            <p>Check your server and PM2 logs.</p>
+                        </div>
+                    `;
                 });
         }
 
-        // Handle form submission (POST request)
+        // Handle form submission (Create or Update)
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            messageDiv.textContent = 'Submitting...';
+            showMessage('Submitting...', 'info');
 
-            const newArticle = {
+            const articleData = {
                 title: document.getElementById('title').value,
                 content: document.getElementById('content').value
             };
 
+            const articleId = articleIdInput.value;
+            const url = isEditMode ? `/api/articles/${articleId}` : '/api/articles/new';
+            const method = isEditMode ? 'PUT' : 'POST';
+
             try {
-                const response = await fetch('/api/articles/new', {
-                    method: 'POST',
+                const response = await fetch(url, {
+                    method: method,
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newArticle)
+                    body: JSON.stringify(articleData)
                 });
 
                 const result = await response.json();
 
                 if (response.ok) {
-                    messageDiv.style.color = 'green';
-                    messageDiv.textContent = 'Article saved successfully!';
+                    showMessage(isEditMode ? 'Article updated successfully! ✓' : 'Article published successfully! ✓', 'success');
                     form.reset();
-                    fetchArticles(); // Reload the list to show the new article
+                    resetForm();
+                    fetchArticles();
                 } else {
-                    messageDiv.style.color = 'red';
-                    messageDiv.textContent = `Submission failed: ${result.error || response.statusText}`;
+                    showMessage(`Failed: ${result.error || response.statusText}`, 'error');
                 }
             } catch (error) {
-                messageDiv.style.color = 'red';
-                messageDiv.textContent = `Network error during submission: ${error.message}`;
+                showMessage(`Network error: ${error.message}`, 'error');
             }
         });
+
+        // Edit article
+        window.editArticle = async (id) => {
+            try {
+                const response = await fetch('/api/articles');
+                const articles = await response.json();
+                const article = articles.find(a => a.id === id);
+
+                if (article) {
+                    isEditMode = true;
+                    articleIdInput.value = article.id;
+                    document.getElementById('title').value = article.title;
+                    document.getElementById('content').value = article.content;
+                    formTitle.textContent = 'Edit Article';
+                    submitBtn.textContent = 'Update Article';
+                    cancelBtn.style.display = 'block';
+                    
+                    // Scroll to form
+                    document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
+                }
+            } catch (error) {
+                showMessage(`Error loading article: ${error.message}`, 'error');
+            }
+        };
+
+        // Delete article
+        window.deleteArticle = async (id) => {
+            if (!confirm('Are you sure you want to delete this article?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/articles/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showMessage('Article deleted successfully!', 'success');
+                    fetchArticles();
+                } else {
+                    showMessage(`Delete failed: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`Error deleting article: ${error.message}`, 'error');
+            }
+        };
+
+        // Cancel edit
+        cancelBtn.addEventListener('click', resetForm);
+
+        function resetForm() {
+            isEditMode = false;
+            articleIdInput.value = '';
+            formTitle.textContent = 'Create New Article';
+            submitBtn.textContent = 'Publish Article';
+            cancelBtn.style.display = 'none';
+            messageDiv.style.display = 'none';
+        }
+
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = type;
+            messageDiv.style.display = 'block';
+            
+            if (type === 'success') {
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 3000);
+            }
+        }
 
         // Initial load
         document.addEventListener('DOMContentLoaded', fetchArticles);
