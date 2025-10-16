@@ -11,7 +11,7 @@ function logChange(message) {
 
 const server = http.createServer((req, res) => {
   logChange(`Request received: ${req.method} ${req.url}`);
-  res.end('Hello, Newsitachi times now Platform! hio v8');
+  res.end('Hello, hi Newsitachi times now Platform! hio v8');
 });
 
 server.listen(3000, () => {
